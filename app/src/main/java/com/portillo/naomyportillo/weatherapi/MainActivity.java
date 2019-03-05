@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.portillo.naomyportillo.weatherapi.recyclerview.WeatherAdapter;
 import com.portillo.naomyportillo.weatherapi.retrofit.WeatherData;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.weather_recycler_container);
     }
 
+
     private void retrofitCall() {
         Retrofit retrofit = WeatherRetroSingleton.getInstance();
         WeatherRetroService weatherRetroService = retrofit.create(WeatherRetroService.class);
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 weatherModelList = response.body().getResponse().get(0).getPeriods();
 
                 Log.d(TAG, "Nummy - This retrofit call was successful " + response.body().toString());
-                Log.d(TAG, "Nummy - " + weatherModelList.get(0).getWeather());
+                Log.d(TAG, "Nummy - " + weatherModelList.get(0).getMaxTempC());
 
                 recyclerView.setAdapter(new WeatherAdapter(weatherModelList));
 //                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

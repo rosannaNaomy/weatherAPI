@@ -4,14 +4,34 @@ public class WeatherModel {
 
     private int maxTempF;
     private int minTempF;
+    private int maxTempC;
+    private int minTempC;
     private String dateTimeISO;
     private String weather;
 
-    public WeatherModel(int maxTempF, int minTempF, String dateTimeISO, String weather) {
+    public WeatherModel(int maxTempF, int minTempF, int maxTempC, int minTempC, String dateTimeISO, String weather) {
         this.maxTempF = maxTempF;
         this.minTempF = minTempF;
+        this.maxTempC = maxTempC;
+        this.minTempC = minTempC;
         this.dateTimeISO = dateTimeISO;
         this.weather = weather;
+    }
+
+    public int getMaxTempC() {
+        return maxTempC;
+    }
+
+    public void setMaxTempC(int maxTempC) {
+        this.maxTempC = maxTempC;
+    }
+
+    public int getMinTempC() {
+        return minTempC;
+    }
+
+    public void setMinTempC(int minTempC) {
+        this.minTempC = minTempC;
     }
 
     public String getWeather() {

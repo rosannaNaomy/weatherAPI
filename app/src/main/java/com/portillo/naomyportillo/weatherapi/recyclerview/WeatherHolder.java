@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,7 +23,7 @@ public class WeatherHolder extends RecyclerView.ViewHolder {
     private static ImageView weatherImageView;
     private static TextView maxTextView;
     private static TextView minTextView;
-    private Button toggleButton;
+    private static Button toggleButton;
 
 
     public WeatherHolder(@NonNull View itemView) {
@@ -36,19 +37,34 @@ public class WeatherHolder extends RecyclerView.ViewHolder {
 
     }
 
-
-
     public static void onBind(final WeatherModel weatherModel) {
 
-        String lowTemp = String.valueOf(weatherModel.getMinTempF()) + "\u00b0" +"f" ;
-        String highTemp = String.valueOf(weatherModel.getMaxTempF()) + "\u00b0" +"f" ;
 
+        String lowTemp = String.valueOf(weatherModel.getMinTempF()) + "\u00b0" + "f";
+        String highTemp = String.valueOf(weatherModel.getMaxTempF()) + "\u00b0" + "f";
 
         dateTextView.setText(weatherModel.getDateTimeISO());
         checkWeather(weatherModel.getWeather());
         minTextView.setText(lowTemp);
         maxTextView.setText(highTemp);
 
+
+        //toggle(weatherModel);
+
+    }
+
+    private static void toggle(final WeatherModel weatherModel) {
+        toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String lowTemp = String.valueOf(weatherModel.getMinTempC()) + "\u00b0" + "C";
+                String highTemp = String.valueOf(weatherModel.getMaxTempC()) + "\u00b0" + "C";
+                minTextView.setText(lowTemp);
+                maxTextView.setText(highTemp);
+
+            }
+        });
     }
 
 
