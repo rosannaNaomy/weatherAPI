@@ -2,8 +2,11 @@ package com.portillo.naomyportillo.weatherapi;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.portillo.naomyportillo.weatherapi.recyclerview.WeatherAdapter;
 import com.portillo.naomyportillo.weatherapi.retrofit.WeatherData;
 import com.portillo.naomyportillo.weatherapi.retrofit.WeatherResponse;
 import com.portillo.naomyportillo.weatherapi.retrofit.WeatherRetroService;
@@ -20,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     List<WeatherModel> weatherModelList;
     private static final String TAG = ".MainActivity" ;
-    private static final String CLIENT_ID = "n2YHtRnS0qfH7etNeOsFQ";
-    private static final String CLIENT_SECRET = "8fzYO96DFdlATtsTU9oQtgLHbWLhSp8ZlrzawYHG";
+    RecyclerView recyclerView;
 
 
     @Override
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         retrofitCall();
-
+        recyclerView = findViewById(R.id.weather_recycler_container);
     }
 
     private void retrofitCall() {
@@ -46,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Nummy - This retrofit call was successful " + response.body().toString());
                 Log.d(TAG, "Nummy - " + weatherModelList.get(0).getWeather());
 
+                recyclerView.setAdapter(new WeatherAdapter(weatherModelList));
+//                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(layoutManager);
             }
 
             @Override

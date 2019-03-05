@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeatherAPI</string>
+    <string name="degree">°</string>
 </resources>

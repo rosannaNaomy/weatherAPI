@@ -2,12 +2,12 @@ package com.portillo.naomyportillo.weatherapi;
 
 public class WeatherModel {
 
-    private String maxTempF;
-    private String minTempF;
+    private int maxTempF;
+    private int minTempF;
     private String dateTimeISO;
     private String weather;
 
-    public WeatherModel(String maxTempF, String minTempF, String dateTimeISO, String weather) {
+    public WeatherModel(int maxTempF, int minTempF, String dateTimeISO, String weather) {
         this.maxTempF = maxTempF;
         this.minTempF = minTempF;
         this.dateTimeISO = dateTimeISO;
@@ -22,19 +22,19 @@ public class WeatherModel {
         this.weather = weather;
     }
 
-    public String getMaxTempF() {
+    public int getMaxTempF() {
         return maxTempF;
     }
 
-    public void setMaxTempF(String maxTempF) {
+    public void setMaxTempF(int maxTempF) {
         this.maxTempF = maxTempF;
     }
 
-    public String getMinTempF() {
+    public int getMinTempF() {
         return minTempF;
     }
 
-    public void setMinTempF(String minTempF) {
+    public void setMinTempF(int minTempF) {
         this.minTempF = minTempF;
     }
 
