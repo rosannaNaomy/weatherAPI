@@ -12,7 +12,4 @@ public class WeatherResponse {
         return periods;
     }
 
-    public void setPeriods(List<WeatherModel> periods) {
-        this.periods = periods;
-    }
 }
