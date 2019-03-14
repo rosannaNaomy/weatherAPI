@@ -1,5 +1,6 @@
 package com.portillo.naomyportillo.weatherapi;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.portillo.naomyportillo.weatherapi.retrofit.WeatherRetroSingleton;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String WEATHER_F = "Farenheit";
     public static final String WEATHER_C = "Celsius";
     public static final String WEATHER_KEY = "Weather";
-
 
 
     @Override
@@ -59,58 +60,68 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Toggle Button:
-     *
+     * <p>
      * if my textview text equals Farenheit
-     *
+     * <p>
      * update shared prefrecnes
      */
     private void toggle() {
-        toggleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        toggleButton.setOnClickListener(v -> {
 
-                if ( toggleButton.getText().toString().equalsIgnoreCase("FAHRENHEIT")) {
+            if (toggleButton.getText().toString().equalsIgnoreCase("FAHRENHEIT")) {
 
-                    sharedPreferences.edit().putString( WEATHER_KEY, WEATHER_C).apply();
-                    weatherAdapter.updateSP(sharedPreferences);
-                    toggleButton.setText(WEATHER_C);
-                    weatherAdapter.notifyDataSetChanged();
-                    Toast.makeText(getApplicationContext(), "click", Toast.LENGTH_SHORT).show();
-                } else if ( toggleButton.getText().toString().equalsIgnoreCase(WEATHER_C)) {
+                sharedPreferences.edit().putString(WEATHER_KEY, WEATHER_C).apply();
+                weatherAdapter.updateSP(sharedPreferences);
+                toggleButton.setText(WEATHER_C);
+                weatherAdapter.notifyDataSetChanged();
+                //Toast.makeText(getApplicationContext(), "Temperature Switched", Toast.LENGTH_SHORT).show();
+            } else if (toggleButton.getText().toString().equalsIgnoreCase(WEATHER_C)) {
 
-                    sharedPreferences.edit().putString( WEATHER_KEY, WEATHER_F).apply();
-                    weatherAdapter.updateSP(sharedPreferences);
-                    toggleButton.setText(WEATHER_F);
-                    weatherAdapter.notifyDataSetChanged();
-                }
+                sharedPreferences.edit().putString(WEATHER_KEY, WEATHER_F).apply();
+                weatherAdapter.updateSP(sharedPreferences);
+                toggleButton.setText(WEATHER_F);
+                weatherAdapter.notifyDataSetChanged();
             }
         });
     }
 
+    @SuppressLint("CheckResult")
     private void retrofitCall() {
-        Retrofit retrofit = WeatherRetroSingleton.getInstance();
-        WeatherRetroService weatherRetroService = retrofit.create(WeatherRetroService.class);
-        Call<WeatherData> weatherDataCall = weatherRetroService.getWeather();
-        weatherDataCall.enqueue(new Callback<WeatherData>() {
-            @Override
-            public void onResponse(Call<WeatherData> call, Response<WeatherData> response) {
-                weatherModelList = response.body().getResponse().get(0).getPeriods();
-
-                Log.d(TAG, "Nummy - This retrofit call was successful " + response.body().toString());
-                Log.d(TAG, "Nummy - " + weatherModelList.get(0).getMaxTempC());
+        WeatherRetroSingleton.getInstance()
+                .create(WeatherRetroService.class)
+                .getWeather()
+                .subscribe(weatherData -> {
+                    WeatherResponse weatherResponse = weatherData.getResponse().get(0);
+                    Log.d(TAG, "Nummy - This retrofit call was successful  - " + weatherData.getResponse().get(0).getPeriods().get(0).getMinTempF())
+                    giveWeatherToItemView(weatherResponse);
+                }, throwable -> Log.d(TAG, "Nummy - On Failure, This retrofit call was not successful" + throwable.getMessage()));
 
 
-                weatherAdapter = new WeatherAdapter(weatherModelList, sharedPreferences);
-                recyclerView.setAdapter(weatherAdapter);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                recyclerView.setLayoutManager(layoutManager);
-            }
+//        WeatherRetroService weatherRetroService = retrofit.create(WeatherRetroService.class);
+//        Call<WeatherData> weatherDataCall = weatherRetroService.getWeather();
+//        weatherDataCall.enqueue(new Callback<WeatherData>() {
+//            @Override
+//            public void onResponse(Call<WeatherData> call, Response<WeatherData> response) {
+//                weatherModelList = response.body().getResponse().get(0).getPeriods();
+//
+//                Log.d(TAG, "Nummy - This retrofit call was successful " + response.body().toString());
+//                Log.d(TAG, "Nummy - " + weatherModelList.get(0).getMaxTempC());
+//
+//
+//                weatherAdapter = new WeatherAdapter(weatherModelList, sharedPreferences);
+//                recyclerView.setAdapter(weatherAdapter);
+//                LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+//                recyclerView.setLayoutManager(layoutManager);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<WeatherData> call, Throwable t) {
+//                Log.d(TAG, "Nummy - On Failure, This retrofit call was not successful" + t.getMessage());
+//            }
+//        });
+    }
 
-            @Override
-            public void onFailure(Call<WeatherData> call, Throwable t) {
-                Log.d(TAG, "Nummy - On Failure, This retrofit call was not successful" + t.getMessage());
-            }
-        });
+    private void giveWeatherToItemView(WeatherResponse weatherResponse) {
     }
 
 
